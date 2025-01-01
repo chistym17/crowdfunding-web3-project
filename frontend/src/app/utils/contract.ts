@@ -16,7 +16,7 @@ if (!contractAddress) {
 const provider = new ethers.BrowserProvider(window.ethereum);
 let contract: Contract;
 
-const initContract = async () => {
+export const initContract = async () => {
   const signer = await provider.getSigner();
   contract = new ethers.Contract(
     contractAddress, 
@@ -34,6 +34,25 @@ export const getContract = () => {
 };
 
 export type CrowdfundingContract = Contract & {
-  createCampaign: (title: string, description: string, goal: bigint) => Promise<ethers.ContractTransaction>;
-  contribute: (campaignId: number) => Promise<ethers.ContractTransaction>;
+  create_campaign: (
+    goal: bigint,
+    deadline: bigint
+  ) => Promise<ethers.ContractTransaction>;
+  
+  contribute: (
+    campaign_id: number,
+    overrides: { value: bigint }
+  ) => Promise<ethers.ContractTransaction>;
+  
+  campaigns: (
+    id: number
+  ) => Promise<[string, bigint, bigint, bigint, boolean]>;
+  
+  withdraw: (
+    campaign_id: number
+  ) => Promise<ethers.ContractTransaction>;
+  
+  refund: (
+    campaign_id: number
+  ) => Promise<ethers.ContractTransaction>;
 }; 
